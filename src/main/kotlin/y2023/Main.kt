@@ -1,5 +1,6 @@
 package y2023
 
 fun main() {
-    Day1(false).printDay()
+    Day1().printDay()
+    Day2().printDay()
 }

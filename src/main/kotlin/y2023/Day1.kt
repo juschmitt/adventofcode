@@ -2,7 +2,7 @@ package y2023
 
 import utils.Day
 
-class Day1(useSampleInput: Boolean) : Day(1, 2023, useSampleInput) {
+class Day1(useSampleInput: Boolean = false) : Day(1, 2023, useSampleInput) {
     override fun partOne(): Any {
         return inputList.findSumOfFirstAndLastDigit()
     }
