@@ -24,15 +24,15 @@ class Day2(useSampleInput: Boolean = false) : Day(2, 2023, useSampleInput) {
         return inputList.mapToGame()
             .map { it.grabs }
             .fold(0) { power, game ->
-                val (red, green, blue) = game.fold(Triple(0, 0, 0)) { acc, cubes ->
-                    val grab = cubes.fold(Triple(0, 0, 0)) { grab, cube ->
+                val (red, green, blue) = game.fold(Triple(0, 0, 0)) { (aRed, aGreen, aBlue), cubes ->
+                    val (gRed, gGreen, gBlue) = cubes.fold(Triple(0, 0, 0)) { (red, green, blue), cube ->
                         when (cube) {
-                            is Cube.Blue -> grab.copy(third = cube.amount)
-                            is Cube.Green -> grab.copy(second = cube.amount)
-                            is Cube.Red -> grab.copy(first = cube.amount)
+                            is Cube.Blue -> Triple(red, green, cube.amount)
+                            is Cube.Green -> Triple(red, cube.amount, blue)
+                            is Cube.Red -> Triple(cube.amount, green, blue)
                         }
                     }
-                    Triple(max(acc.first, grab.first), max(acc.second, grab.second), max(acc.third, grab.third))
+                    Triple(max(aRed, gRed), max(aGreen, gGreen), max(aBlue, gBlue))
                 }
                 power + (red * green * blue)
             }
