@@ -2,12 +2,14 @@ package y2023
 
 import utils.Day
 
-class Day1 : Day(1, 2023) {
+class Day1(useSampleInput: Boolean) : Day(1, 2023, useSampleInput) {
     override fun partOne(): Any {
-        TODO("Not yet implemented")
+        return inputList.map { line ->
+            "${line.first { it.isDigit() }}${line.last { it.isDigit() }}"
+        }.sumOf { it.toInt() }
     }
 
     override fun partTwo(): Any {
-        TODO("Not yet implemented")
+        return Unit
     }
 }

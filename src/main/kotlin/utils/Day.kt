@@ -28,7 +28,7 @@ abstract class Day(
     }
 }
 
-object InputReader {
+private object InputReader {
 
     fun getInputAsString(day: Int, year: Int, useSampleInput: Boolean): String =
         fileReader(day, year, useSampleInput).readText()
