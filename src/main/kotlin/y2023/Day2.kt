@@ -1,6 +1,7 @@
 package y2023
 
 import utils.Day
+import kotlin.math.max
 
 class Day2(useSampleInput: Boolean = false) : Day(2, 2023, useSampleInput) {
     override fun partOne(): Any {
@@ -20,7 +21,21 @@ class Day2(useSampleInput: Boolean = false) : Day(2, 2023, useSampleInput) {
     }
 
     override fun partTwo(): Any {
-        return Unit
+        return inputList.mapToGame()
+            .map { it.grabs }
+            .fold(0) { power, game ->
+                val (red, green, blue) = game.fold(Triple(0, 0, 0)) { acc, cubes ->
+                    val grab = cubes.fold(Triple(0, 0, 0)) { grab, cube ->
+                        when (cube) {
+                            is Cube.Blue -> grab.copy(third = cube.amount)
+                            is Cube.Green -> grab.copy(second = cube.amount)
+                            is Cube.Red -> grab.copy(first = cube.amount)
+                        }
+                    }
+                    Triple(max(acc.first, grab.first), max(acc.second, grab.second), max(acc.third, grab.third))
+                }
+                power + (red * green * blue)
+            }
     }
 }
 
