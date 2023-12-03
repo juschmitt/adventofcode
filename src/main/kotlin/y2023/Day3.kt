@@ -22,11 +22,8 @@ private fun Schema.Symbol.isGear(schemaMap: Map<Int, List<Schema>>, lineIdx: Int
     symbol == "*" && getAdjacentNumbers(schemaMap, lineIdx).size == 2
 
 private fun Schema.Symbol.getAdjacentNumbers(schemaMap: Map<Int, List<Schema>>, lineIdx: Int): List<Schema.Number> =
-    (schemaMap.getOrDefault(lineIdx, emptyList()) +
-            schemaMap.getOrDefault(lineIdx+1, emptyList()) +
-            schemaMap.getOrDefault(lineIdx-1, emptyList()))
-        .filterIsInstance<Schema.Number>()
-        .filter { this.index in it.startIndex-1..it.endIndex+1 }
+    schemaMap.getSurroundingLines(lineIdx)
+        .filterInRange { this.index in it.startIndex-1..it.endIndex+1 }
 
 private fun Map<Int, List<Schema>>.numbersWithAdjacentSymbol(): List<Schema.Number> = map { entry ->
     entry.value.filter { schema -> schema is Schema.Number && schema.hasAdjacentSymbol(this, entry.key) }
@@ -34,13 +31,16 @@ private fun Map<Int, List<Schema>>.numbersWithAdjacentSymbol(): List<Schema.Numb
 }.flatten()
 
 private fun Schema.Number.hasAdjacentSymbol(schemaMap: Map<Int, List<Schema>>, lineIdx: Int): Boolean =
-    (schemaMap.getOrDefault(lineIdx, emptyList()) +
-            schemaMap.getOrDefault(lineIdx+1, emptyList()) +
-            schemaMap.getOrDefault(lineIdx-1, emptyList()))
-        .findSymbolInRange(this.startIndex-1..this.endIndex+1) != null
+    schemaMap.getSurroundingLines(lineIdx)
+        .filterInRange<Schema.Symbol> { it.index in this.startIndex-1..this.endIndex+1 }.isNotEmpty()
 
-private fun List<Schema>?.findSymbolInRange(range: IntRange): Schema.Symbol? =
-    this?.filterIsInstance<Schema.Symbol>()?.find { it.index in range }
+private inline fun <reified T : Schema> List<Schema>.filterInRange(filter: (T) -> Boolean): List<T> =
+    filterIsInstance<T>().filter(filter)
+
+private fun Map<Int, List<Schema>>.getSurroundingLines(lineIdx: Int): List<Schema> =
+    getOrDefault(lineIdx, emptyList()) +
+            getOrDefault(lineIdx+1, emptyList()) +
+            getOrDefault(lineIdx-1, emptyList())
 
 private fun List<String>.mapToSchema(): Map<Int, List<Schema>> = mapIndexed { index, line ->
     val symbols: List<Schema.Symbol> = line.mapIndexedNotNull { i, c ->
