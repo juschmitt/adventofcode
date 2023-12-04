@@ -4,4 +4,5 @@ fun main() {
     Day1().printDay()
     Day2().printDay()
     Day3().printDay()
+    Day4().printDay()
 }
