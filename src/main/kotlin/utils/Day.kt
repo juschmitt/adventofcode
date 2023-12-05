@@ -22,8 +22,10 @@ abstract class Day(
         val footer = "—".repeat(header.length)
 
         println(header)
-        println("Part 1: ${partOne()}")
-        println("Part 2: ${partTwo()}")
+        val startTimeP1 = System.currentTimeMillis()
+        println("Part 1: ${partOne()} | Runtime: ${System.currentTimeMillis() - startTimeP1}")
+        val startTimeP2 = System.currentTimeMillis()
+        println("Part 2: ${partTwo()} | Runtime: ${System.currentTimeMillis() - startTimeP2}")
         println(footer)
     }
 }

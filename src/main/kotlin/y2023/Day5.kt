@@ -1,7 +1,6 @@
 package y2023
 
 import utils.Day
-import kotlin.math.min
 
 class Day5(useSampleInput: Boolean = false) : Day(5, 2023, useSampleInput) {
     override fun partOne(): Any {
