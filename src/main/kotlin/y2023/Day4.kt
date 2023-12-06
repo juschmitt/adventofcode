@@ -3,7 +3,7 @@ package y2023
 import utils.Day
 import kotlin.math.pow
 
-class Day4(useSampleInput: Boolean = false) : Day(4, 2023, useSampleInput) {
+class Day4 : Day(4, 2023, false) {
     override fun partOne(): Any {
         return inputList.mapToCards().calculatePointsPerCard().sum()
     }

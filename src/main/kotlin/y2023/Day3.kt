@@ -2,7 +2,7 @@ package y2023
 
 import utils.Day
 
-class Day3(useSampleInput: Boolean = false) : Day(3, 2023, useSampleInput) {
+class Day3 : Day(3, 2023, false) {
     override fun partOne(): Any {
         return inputList.mapToSchema().numbersWithAdjacentSymbol().sumOf { it.value }
     }

@@ -3,7 +3,7 @@ package y2023
 import utils.Day
 import kotlin.math.max
 
-class Day2(useSampleInput: Boolean = false) : Day(2, 2023, useSampleInput) {
+class Day2 : Day(2, 2023, false) {
     override fun partOne(): Any {
         return inputList
             .mapToGame()
@@ -71,6 +71,6 @@ private sealed interface Cube {
 }
 
 
-val winningReds = 12
-val winningGreens = 13
-val winningBlues = 14
+private const val winningReds = 12
+private const val winningGreens = 13
+private const val winningBlues = 14

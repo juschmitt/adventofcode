@@ -2,7 +2,7 @@ package y2023
 
 import utils.Day
 
-class Day5(useSampleInput: Boolean = false) : Day(5, 2023, useSampleInput) {
+class Day5 : Day(5, 2023, false) {
     override fun partOne(): Any {
         return inputString.parseAlmanac().run {
             seeds.minOf { seed ->
