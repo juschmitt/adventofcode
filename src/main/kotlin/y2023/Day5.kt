@@ -13,19 +13,28 @@ class Day5(useSampleInput: Boolean = false) : Day(5, 2023, useSampleInput) {
 
     override fun partTwo(): Any {
         return inputString.parseAlmanac().run {
-            seeds.chunked(2).minOf { (start, range) ->
-                (start..<(start + range)).minOf { seed ->
-                    maps.findLocationForSeed(seed)
+            locations().first {
+                val seed = maps.findSeedForLocation(it)
+                seeds.chunked(2).fold(false) { acc, (start, range) ->
+                    acc || (start..<(start + range)).contains(seed)
                 }
             }
         }
     }
 }
 
+private fun locations(): Sequence<Long> = generateSequence(1) { it + 1 }
+
 private fun List<List<Pair<LongRange, LongRange>>>.findLocationForSeed(seed: Long) =
     fold(seed) { cur, map ->
         val mapping = map.find { (source, _) -> source.contains(cur) }
         mapping?.let { (source, dest) -> dest.first + (cur - source.first) } ?: cur
+    }
+
+private fun List<List<Pair<LongRange, LongRange>>>.findSeedForLocation(location: Long) =
+    reversed().fold(location) { cur, map ->
+        val mapping = map.find { (_, dest) -> dest.contains(cur) }
+        mapping?.let { (source, dest) -> source.first + (cur - dest.first) } ?: cur
     }
 
 private fun String.parseAlmanac(): Almanac {
