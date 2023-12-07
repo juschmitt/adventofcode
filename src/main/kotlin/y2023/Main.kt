@@ -6,5 +6,6 @@ fun main() {
     //Day3().printDay()
     //Day4().printDay()
     //Day5().printDay()
-    Day6().printDay()
+    //Day6().printDay()
+    Day7().printDay()
 }
