@@ -8,18 +8,77 @@ class Day7 : Day(7, 2023, false) {
             .map {
                 val (hand, bid) = it.split(" ")
                 hand to bid
-            }.sortedWith(CardComparator())
-            .mapIndexed { index, (_, bid) -> (index+1)*bid.toInt() }
+            }.sortedWith(RegularCardComparator())
+            .mapIndexed { index, (_, bid) -> (index + 1) * bid.toInt() }
             .sum()
 
     }
 
     override fun partTwo(): Any {
-        return Unit
+        return inputList
+            .map {
+                val (hand, bid) = it.split(" ")
+                hand to bid
+            }.sortedWith(JokerRuleCardComparator())
+            .mapIndexed { index, (_, bid) -> (index + 1) * bid.toInt() }
+            .sum()
     }
 }
 
-private class CardComparator : Comparator<Pair<String, String>> {
+private class JokerRuleCardComparator : CardComparator() {
+
+    override fun Map<Char, Int>.mapOccurrencesToStrength(): Int {
+        val j = getOrDefault('J', 0)
+        if (j == 5) return 6
+        val max = maxOf { (k,v) -> if (k == 'J') v*-1 else v } + j
+        return when {
+            max == 5 -> 6
+            max == 4 -> 5
+            max == 3 && values.min() == 2 -> 4
+            max == 3 -> 3
+            max == 2 && values.count { it == 2 } == 2 -> 2
+            max == 2 -> 1
+            max == 1 -> 0
+            else -> -1
+        }
+    }
+
+    override fun Char.cardToValue(): Int = when {
+        this == 'A' -> 14
+        this == 'K' -> 13
+        this == 'Q' -> 12
+        this == 'J' -> 0
+        this == 'T' -> 10
+        isDigit() -> digitToInt()
+        else -> -1
+    }
+}
+
+private class RegularCardComparator : CardComparator() {
+
+    override fun Map<Char, Int>.mapOccurrencesToStrength(): Int = when {
+        values.max() == 5 -> 6
+        values.max() == 4 -> 5
+        values.max() == 3 && values.min() == 2 -> 4
+        values.max() == 3 -> 3
+        values.max() == 2 && values.count { it == 2 } == 2 -> 2
+        values.max() == 2 -> 1
+        values.max() == 1 -> 0
+        else -> -1
+    }
+
+    override fun Char.cardToValue(): Int = when {
+        this == 'A' -> 14
+        this == 'K' -> 13
+        this == 'Q' -> 12
+        this == 'J' -> 11
+        this == 'T' -> 10
+        isDigit() -> digitToInt()
+        else -> -1
+    }
+}
+
+private abstract class CardComparator : Comparator<Pair<String, String>> {
     override fun compare(o1: Pair<String, String>?, o2: Pair<String, String>?): Int {
         return when {
             o1 == null -> -1
@@ -33,7 +92,7 @@ private class CardComparator : Comparator<Pair<String, String>> {
         val strengthHand2 = mapCharOccurrences(o2).mapOccurrencesToStrength()
 
         val strengthByType = strengthHand1 - strengthHand2
-        if(strengthByType != 0) return strengthByType
+        if (strengthByType != 0) return strengthByType
 
         o1.zip(o2)
             .forEach { (a, b) ->
@@ -48,24 +107,7 @@ private class CardComparator : Comparator<Pair<String, String>> {
         map
     }
 
-    private fun Map<Char, Int>.mapOccurrencesToStrength(): Int = when {
-        values.max() == 5 -> 6
-        values.max() == 4 -> 5
-        values.max() == 3 && values.min() == 2 -> 4
-        values.max() == 3 -> 3
-        values.max() == 2 && values.count { it == 2 } == 2 -> 2
-        values.max() == 2 -> 1
-        values.max() == 1 -> 0
-        else -> -1
-    }
-}
+    abstract fun Map<Char, Int>.mapOccurrencesToStrength(): Int
 
-private fun Char.cardToValue(): Int = when {
-    this == 'A' -> 14
-    this == 'K' -> 13
-    this == 'Q' -> 12
-    this == 'J' -> 11
-    this == 'T' -> 10
-    isDigit() -> digitToInt()
-    else -> -1
+    abstract fun Char.cardToValue(): Int
 }
