@@ -30,15 +30,19 @@ private class JokerRuleCardComparator : CardComparator() {
     override fun Map<Char, Int>.mapOccurrencesToStrength(): Int {
         val j = getOrDefault('J', 0)
         if (j == 5) return 6
-        val max = maxOf { (k,v) -> if (k == 'J') v*-1 else v } + j
+        val max = filterNot { it.key == 'J' }.values.max()
+        val min = filterNot { it.key == 'J' }.values.min()
+        val count = values.count { it == 2 }
         return when {
-            max == 5 -> 6
-            max == 4 -> 5
-            max == 3 && values.min() == 2 -> 4
-            max == 3 -> 3
-            max == 2 && values.count { it == 2 } == 2 -> 2
-            max == 2 -> 1
-            max == 1 -> 0
+            max + j == 5 -> 6
+            max + j == 4 -> 5
+            max + j == 3 && min == 2 -> 4
+            max == 3 && min + j == 2 -> 4
+            max + j == 3 -> 3
+            max + j == 2 && count == 2 -> 2
+            max == 2 && count + j == 2 -> 2
+            max + j == 2 -> 1
+            max + j == 1 -> 0
             else -> -1
         }
     }
