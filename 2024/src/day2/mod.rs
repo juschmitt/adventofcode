@@ -20,7 +20,7 @@ fn day2_part2(input: &str) -> i32 {
     input
         .iter()
         .filter(|&row| {
-            (0..row.len()).into_iter().any(|idx| is_safe(row, Some(idx)))
+            is_safe(row, None) || (0..row.len()).into_iter().any(|idx| is_safe(row, Some(idx)))
         })
         .count() as i32
 }
