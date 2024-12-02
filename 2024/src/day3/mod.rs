@@ -1,5 +1,8 @@
 pub fn day3() {
-    todo!()
+    let part1_result = day3_part1(INPUT);
+    println!("Day 3, Part 1: {}", part1_result);
+    let part2_result = day3_part2(INPUT);
+    println!("Day 3, Part 2: {}", part2_result);
 }
 
 fn day3_part1(input: &str) -> i32 {
