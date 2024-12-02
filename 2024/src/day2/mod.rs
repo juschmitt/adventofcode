@@ -10,30 +10,46 @@ fn day2_part1(input: &str) -> i32 {
     input
         .iter()
         .filter(|&row| {
-            if !row.iter().is_sorted_by(|a, b| a < b) && !row.iter().is_sorted_by(|a, b| a > b) {
-                return false;
-            }
-            let mut is_safe = true;
-            let mut prev = None;
-            for elt in row {
-                if prev.is_none() {
-                    prev = Some(elt);
-                    continue;
-                }
-                let level_diff = (prev.unwrap() - elt).abs();
-                is_safe = level_diff > 0 && level_diff < 4;
-                prev = Some(elt);
-                if !is_safe {
-                    break;
-                }
-            }
-            is_safe
+            is_safe(row, None)
         })
         .count() as i32
 }
 
 fn day2_part2(input: &str) -> i32 {
-    0
+    let input = parse_input(input);
+    input
+        .iter()
+        .filter(|&row| {
+            (0..row.len()).into_iter().any(|idx| is_safe(row, Some(idx)))
+        })
+        .count() as i32
+}
+
+fn is_safe(row: &Vec<i32>, skip_idx: Option<usize>) -> bool {
+    let is_ascending = row[0] < row[1];
+    let mut is_safe = true;
+    let mut prev = None;
+    for (idx, cur) in row.iter().enumerate() {
+        if Some(idx) == skip_idx {
+            continue;
+        }
+        if prev.is_none() {
+            prev = Some(cur);
+            continue;
+        }
+        let level_diff = (prev.unwrap() - cur).abs();
+        let safe_direction = if is_ascending {
+            prev.unwrap() < cur
+        } else {
+            prev.unwrap() > cur
+        };
+        is_safe = level_diff > 0 && level_diff < 4 && safe_direction;
+        prev = Some(cur);
+        if !is_safe {
+            break;
+        }
+    }
+    is_safe
 }
 
 fn parse_input(input: &str) -> Vec<Vec<i32>> {
@@ -55,6 +71,12 @@ mod tests {
     fn test_part1() {
         let result = day2_part1(TEST_INPUT);
         assert_eq!(result, 2);
+    }
+
+    #[test]
+    fn test_part2() {
+        let result = day2_part2(TEST_INPUT);
+        assert_eq!(result, 4);
     }
 }
 
