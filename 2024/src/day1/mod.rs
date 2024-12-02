@@ -1,6 +1,8 @@
 pub fn day1() {
-    let _part1_result = day1_part1(false);
-    println!("Day 1, Part 1: {}", _part1_result);
+    let part1_result = day1_part1(false);
+    println!("Day 1, Part 1: {}", part1_result);
+    let part2_result = day1_part2(false);
+    println!("Day 1, Part 2: {}", part2_result);
 }
 
 fn day1_part1(test: bool) -> i32 {
@@ -16,6 +18,17 @@ fn day1_part1(test: bool) -> i32 {
         .zip(second.iter())
         .map(|(a, b)| (a - b).abs())
         .sum()
+}
+
+fn day1_part2(test: bool) -> i32 {
+    let (first, second) = if test {
+        parse_input(TEST_INPUT)
+    } else {
+        parse_input(INPUT)
+    };
+    first.iter().map(|f| {
+        (second.iter().filter(|&s| s == f).count() as i32) * f
+    }).sum()
 }
 
 fn parse_input(input: &str) -> (Vec<i32>, Vec<i32>) {
