@@ -6,11 +6,24 @@ pub fn day3() {
 }
 
 fn day3_part1(input: &str) -> i32 {
-    todo!()
+    parse_input(input)
+        .iter()
+        .map(|(a, b)| a * b)
+        .sum()
 }
 
 fn day3_part2(input: &str) -> i32 {
-    todo!()
+    0
+}
+
+fn parse_input(input: &str) -> Vec<(i32, i32)> {
+    let r = regex::Regex::new(r"mul\(\d+,\d+\)").unwrap();
+    r.find_iter(input).map(|m| m.as_str().split(","))
+    .map(|mut x| {
+        let a = x.next().unwrap().strip_prefix("mul(").unwrap().parse().unwrap();
+        let b = x.next().unwrap().strip_suffix(")").unwrap().parse().unwrap();
+        (a, b)
+    }).collect()
 }
 
 #[cfg(test)]
@@ -21,7 +34,7 @@ mod tests {
 
     #[test]
     fn test_day3_part1() {
-        assert_eq!(day3_part1(TEST_INPUT), 0);
+        assert_eq!(day3_part1(TEST_INPUT), 161);
     }
 
     #[test]
