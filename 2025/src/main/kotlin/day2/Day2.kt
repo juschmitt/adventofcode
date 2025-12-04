@@ -3,7 +3,6 @@ package day2
 import utils.getInputAsString
 
 fun main() {
-
     println("------Part 1-------")
     println("Sum of invalid IDs: ${partOne(getInputAsString(2, false))}")
     println("------Part 2-------")
